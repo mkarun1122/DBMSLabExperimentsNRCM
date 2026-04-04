@@ -1,0 +1,180 @@
+-- EXPERIMENT – 8
+/* 
+TRIGGERS (MySQL)
+Aim
+Creation of INSERT trigger, UPDATE trigger and DELETE trigger.
+A trigger is a stored procedure that is automatically executed by the database when a specified event occurs on a table.
+Types of Triggers
+BEFORE INSERT – Executes before inserting data
+AFTER INSERT – Executes after inserting data
+BEFORE UPDATE – Executes before updating data
+AFTER UPDATE – Executes after updating data
+BEFORE DELETE – Executes before deleting data
+AFTER DELETE – Executes after deleting data
+
+create database arundbex8;
+use arundbex8;
+
+*/
+
+-- 1. Create EMPINFO Table
+CREATE TABLE EMPINFO (
+EID INT PRIMARY KEY,
+EMPLOYEENAME VARCHAR(50),
+JOB VARCHAR(20),
+MGRID INT,
+HIREDATE DATE,
+SALARY INT,
+COMMISSION INT,
+DEPTNO INT
+);
+-- 2. Insert Sample Data
+INSERT INTO EMPINFO VALUES
+(1001,'ANIL','MANAGER',NULL,'2010-03-03',35000,NULL,10),
+(1002,'AKHIL','CLERK',1001,'2015-04-02',25000,NULL,10),
+(1003,'VINOD','SALES',1001,'2016-06-05',18000,1800,10),
+(1004,'VIKAS','SALES',1001,'2016-07-06',16000,1600,10),
+(1005,'SUNIL','MANAGER',NULL,'2011-04-03',30000,NULL,20),
+(1006,'KIRAN','CLERK',1005,'2016-06-05',20000,NULL,20),
+(1007,'AREEB','SALES',1005,'2016-05-10',15000,1500,20);
+
+
+-- 3. BEFORE INSERT Trigger
+-- Prevent insertion into EMPINFO
+DELIMITER $$
+CREATE TRIGGER before_insert_emp
+BEFORE INSERT ON EMPINFO
+FOR EACH ROW
+BEGIN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT='Insertion not allowed in EMPINFO table';
+END$$
+DELIMITER ;
+-- Test
+select * from EMPINFO;
+INSERT INTO EMPINFO VALUES
+(1008,'RAJ','CLERK',1001,'2017-01-01',20000,NULL,10);
+
+-- It will display an error message.
+
+-- Drop Trigger
+DROP TRIGGER before_insert_emp;
+
+
+-- 4. Create Audit Table
+CREATE TABLE EMPINFOAUDIT (
+EID INT,
+EMPLOYEENAME VARCHAR(50),
+JOB VARCHAR(20),
+ACTIONTYPE VARCHAR(20),
+ACTIONDATE DATETIME
+);
+select * from EMPINFOAUDIT;
+-- 5. AFTER INSERT Trigger
+-- Copy inserted data into EMPINFOAUDIT
+
+DELIMITER $$
+CREATE TRIGGER after_insert_emp
+AFTER INSERT ON EMPINFO
+FOR EACH ROW
+BEGIN
+INSERT INTO EMPINFOAUDIT
+VALUES(NEW.EID,NEW.EMPLOYEENAME,NEW.JOB,'INSERT',NOW());
+END$$
+
+DELIMITER ;
+-- Test
+INSERT INTO EMPINFO VALUES
+(1008,'RAJ','CLERK',1001,'2017-01-01',20000,NULL,10);
+
+-- Check audit table:
+
+SELECT * FROM EMPINFOAUDIT;
+
+-- 6. BEFORE UPDATE Trigger
+-- Prevent updating MANAGER or CLERK
+
+DELIMITER $$
+
+CREATE TRIGGER before_update_emp
+BEFORE UPDATE ON EMPINFO
+FOR EACH ROW
+BEGIN
+IF OLD.JOB='MANAGER' OR OLD.JOB='CLERK' THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT='Cannot update MANAGER or CLERK details';
+END IF;
+END$$
+
+DELIMITER ;
+-- Test
+UPDATE EMPINFO
+SET SALARY=40000
+WHERE EID=1001;
+
+
+-- 7. AFTER UPDATE Trigger
+-- Copy updated records into EMPINFOAUDIT
+
+DELIMITER $$
+
+CREATE TRIGGER after_update_emp
+AFTER UPDATE ON EMPINFO
+FOR EACH ROW
+BEGIN
+INSERT INTO EMPINFOAUDIT
+VALUES(NEW.EID,NEW.EMPLOYEENAME,NEW.JOB,'UPDATE',NOW());
+END$$
+
+DELIMITER ;
+-- Test
+UPDATE EMPINFO
+SET SALARY=22000
+WHERE EID=1003;
+
+-- Check audit table:
+
+SELECT * FROM EMPINFOAUDIT;
+
+-- 8. BEFORE DELETE Trigger
+-- Prevent deletion of more than one row
+
+DELIMITER $$
+
+CREATE TRIGGER before_delete_emp
+BEFORE DELETE ON EMPINFO
+FOR EACH ROW
+BEGIN
+IF (SELECT COUNT(*) FROM EMPINFO) > 1 THEN
+SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT='Cannot delete multiple rows';
+END IF;
+END$$
+
+DELIMITER ;
+
+-- 9. AFTER DELETE Trigger
+-- Copy deleted records to EMPINFOAUDIT
+
+DELIMITER $$
+
+CREATE TRIGGER after_delete_emp
+AFTER DELETE ON EMPINFO
+FOR EACH ROW
+BEGIN
+INSERT INTO EMPINFOAUDIT
+VALUES(OLD.EID,OLD.EMPLOYEENAME,OLD.JOB,'DELETE',NOW());
+END$$
+
+DELIMITER ;
+-- Test
+DELETE FROM EMPINFO
+WHERE EID=1008;
+
+-- Check audit table:
+
+SELECT * FROM EMPINFOAUDIT;
+-- Result
+
+-- Triggers for INSERT, UPDATE and DELETE operations were successfully created and tested on the EMPINFO table.
+
