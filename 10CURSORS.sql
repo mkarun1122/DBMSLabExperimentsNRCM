@@ -1,5 +1,6 @@
 -- EXPERIMENT – 10
 /*
+
 CURSORS
 Aim
 Declare a cursor that defines a result set.
@@ -12,6 +13,8 @@ Declare Cursor – Define the SELECT query
 Open Cursor – Start the cursor
 Fetch Cursor – Retrieve rows one by one
 Close Cursor – Release cursor resources
+
+
 */
 
 -- 1. Cursor to Display Employee Name and Salary Procedure with Cursor

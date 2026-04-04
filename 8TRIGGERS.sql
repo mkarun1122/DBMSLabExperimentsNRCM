@@ -3,7 +3,8 @@
 TRIGGERS (MySQL)
 Aim
 Creation of INSERT trigger, UPDATE trigger and DELETE trigger.
-A trigger is a stored procedure that is automatically executed by the database when a specified event occurs on a table.
+A trigger is a stored procedure that is automatically 
+executed by the database when a specified event occurs on a table.
 Types of Triggers
 BEFORE INSERT – Executes before inserting data
 AFTER INSERT – Executes after inserting data

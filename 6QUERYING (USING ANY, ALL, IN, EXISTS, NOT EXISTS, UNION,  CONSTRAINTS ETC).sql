@@ -1,6 +1,9 @@
 -- EXPERIMENT – 6
  /* 
-Querying (using ANY, ALL, IN, Exists, NOT EXISTS, UNION,  Constraints etc.) 
+ 
+Querying (using ANY, ALL, IN, Exists, NOT EXISTS, UNION,  
+Constraints etc.) 
+
 */
 DROP DATABASE IF EXISTS EXPERIMENT6DB;
 CREATE DATABASE EXPERIMENT6DB;

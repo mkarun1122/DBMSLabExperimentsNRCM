@@ -3,8 +3,10 @@
 
 STORED PROCEDURES
 Aim
-Creation of Stored Procedures, execution of procedures, and modification of procedures.
-A Stored Procedure is a precompiled collection of SQL statements stored in the database
+Creation of Stored Procedures, execution of procedures, 
+and modification of procedures.
+A Stored Procedure is a precompiled collection of SQL statements
+stored in the database
 and executed using the CALL command.
 */
 
@@ -129,11 +131,11 @@ DELIMITER ;
 -- Execute Procedure
 CALL add_employee_check(1009,'KUMAR','SALES',1001,'2018-02-02',22000,2000,20);
 -- Drop Procedure (If Needed)
-DROP PROCEDURE procedure_name;
+-- DROP PROCEDURE procedure_name;
 
 -- Example:
 
-DROP PROCEDURE sum_two_numbers;
+-- DROP PROCEDURE sum_two_numbers;
 -- Result
 
 -- Stored Procedures were created, executed, and modified successfully in MySQL.
