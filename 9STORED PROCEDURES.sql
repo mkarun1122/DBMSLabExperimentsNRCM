@@ -8,6 +8,10 @@ A Stored Procedure is a precompiled collection of SQL statements stored in the d
 and executed using the CALL command.
 */
 
+DROP DATABASE IF EXISTS EXPERIMENT9DB;
+CREATE DATABASE EXPERIMENT9DB;
+USE EXPERIMENT9DB;
+
 
 -- 1. Procedure to Print Sum of Two Values
 Create Procedure
